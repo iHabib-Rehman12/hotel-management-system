@@ -1,4 +1,6 @@
-# hotel-management-systemHotel Management System with GUI and Java
+# hotel-management-system
+
+Hotel Management System with GUI and Java
 
 This Java-based application offers a user-friendly GUI for managing hotels. It utilizes an SQL database for secure and efficient data storage, enabling features like:
 
