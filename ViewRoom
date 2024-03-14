@@ -1,0 +1,81 @@
+package Reception;
+import javax.swing.*;
+import javax.swing.table.*;
+
+import Admin.Reception;
+import Core.Conn;
+import net.proteanit.sql.DbUtils;
+
+import java.awt.*;
+import java.sql.*;
+
+
+public class ViewRoom extends JFrame{
+	JTable table;
+	JButton back;
+	DefaultTableModel model=new DefaultTableModel();
+	public ViewRoom(){
+		getContentPane().setBackground(Color.white);
+		setLayout(null);
+		
+		ImageIcon i1=new ImageIcon(ClassLoader.getSystemResource("icons/eight.jpg"));
+		Image i2=i1.getImage().getScaledInstance(600, 600, Image.SCALE_DEFAULT);
+		ImageIcon i3=new ImageIcon(i2);
+		JLabel image=new JLabel(i3);
+		image.setBounds(500,0,600,600);
+		add(image);
+		
+		
+		
+		
+		try {
+			Conn c=new Conn();
+			ResultSet rs=c.s.executeQuery("select * from room");
+			
+			
+			int columnCount=rs.getMetaData().getColumnCount();
+			for(int j=1; j<=columnCount; j++) {
+				model.addColumn(rs.getMetaData().getColumnName(j));
+			}
+			
+			
+			while(rs.next()) {
+				Object[] rowData=new Object[columnCount];
+				for(int i=1; i<=columnCount; i++)
+					rowData[i-1]=rs.getObject(i);
+					model.addRow(rowData);
+			}
+			
+			
+			
+			table=new JTable(model);
+			table.setBounds(0,30,500,400);
+			
+			JTableHeader header=table.getTableHeader();
+			header.setBounds(0,0,500,30);
+			
+			back=new JButton("Back");
+			back.setBackground(Color.black);
+			back.setForeground(Color.white);
+			back.setBounds(200,500,120,30);
+			add(back);
+			back.addActionListener(ActionEvent ->{
+				new Reception();
+				setVisible(false);
+			});
+			add(header);
+
+			add(table);
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
+		
+		catch(Exception ae) {
+			ae.printStackTrace();
+		}
+		
+		setBounds(300,200,1050,600);
+		setVisible(true);
+		setTitle("Room View");
+		
+	}
+}
