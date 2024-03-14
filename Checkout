@@ -1,0 +1,151 @@
+package Reception;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.Date;
+
+import javax.swing.*;
+
+import Admin.Reception;
+import Core.Conn;
+
+
+public class Checkout extends JFrame implements ActionListener{
+	Choice c_customer;
+	Date date=new Date();
+	JLabel lblroomnumber,lblcheckintime,lblcheckouttime;
+	JButton checkout,back,check;
+	public Checkout() {
+		
+		getContentPane().setBackground(Color.white);
+		setLayout(null);
+		
+		JLabel text = new JLabel("Checkout");
+		text.setBounds(100,20,100,30);
+		text.setForeground(Color.blue);
+		text.setFont(new Font("Tahoma",Font.BOLD,20));
+		add(text);
+		
+		JLabel lblid = new JLabel("Customer Id");
+		lblid.setBounds(30,80,100,30);
+		add(lblid);
+		
+		c_customer=new Choice();
+		c_customer.setBounds(180 ,80,150,25);
+		add(c_customer);
+		
+		ImageIcon i1  = new ImageIcon(ClassLoader.getSystemResource("icons/tick.png"));
+        Image i3 = i1.getImage().getScaledInstance(20, 20,Image.SCALE_DEFAULT);
+        ImageIcon i2 = new ImageIcon(i3);
+        JLabel l1 = new JLabel(i2);
+        l1.setBounds(340,80,20,20);
+        add(l1);
+        
+        JLabel lblroom = new JLabel("Room No:");
+        lblroom.setBounds(30,130,100,30);
+		add(lblroom);
+		
+		lblroomnumber = new JLabel();
+		lblroomnumber.setBounds(200,130,100,30);
+		add(lblroomnumber);
+		
+		JLabel lblcheckin = new JLabel("Checkin Time");
+		lblcheckin.setBounds(30,180,100,30);
+		add(lblcheckin);
+		
+		lblcheckintime = new JLabel();
+		lblcheckintime.setBounds(180,180,200,30);
+		add(lblcheckintime);
+		
+		JLabel lblcheckout = new JLabel("Checkout Time");
+		lblcheckout.setBounds(30,230,100,30);
+		add(lblcheckout);
+		
+		lblcheckouttime = new JLabel(""+date);
+		lblcheckouttime.setBounds(180,230,200,30);
+		add(lblcheckouttime);
+				
+		
+		try {
+			Conn c=new Conn();
+			ResultSet rs=c.s.executeQuery("select * from customer");
+			while(rs.next()) {
+				c_customer.add(rs.getString("number"));
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		check =new JButton("Check");
+		check.setBackground(Color.black);
+		check.setForeground(Color.white);
+		check.setBounds(20,300,90,30);
+		add(check);
+		check.addActionListener(this);
+		
+		checkout=new JButton("Checkout");
+		checkout.setBackground(Color.black);
+		checkout.setForeground(Color.white);
+		checkout.setBounds(130,300,90,30);
+		add(checkout);
+		checkout.addActionListener(this);
+		
+		back=new JButton("Back");
+		back.setBackground(Color.white);
+		back.setForeground(Color.black);
+		back.setBounds(250,300,90,30);
+		add(back);
+		back.addActionListener(this);
+
+		ImageIcon i9  = new ImageIcon(ClassLoader.getSystemResource("icons/sixth.jpg"));
+        Image i4 = i9.getImage().getScaledInstance(400, 250,Image.SCALE_DEFAULT);
+        ImageIcon i5 = new ImageIcon(i4);
+        JLabel l2 = new JLabel(i5);
+        l2.setBounds(370,60,400,250);
+        add(l2);
+		
+		setBounds(300,200,800,400);
+		setVisible(true);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+			if(e.getSource()==checkout) {
+				String query1="delete from customer where number='"+c_customer.getSelectedItem()+"'";
+				String query2="update room set availability = 'Available' where room_num = '"+lblroomnumber.getText()+"'";
+				try {
+					Conn c=new Conn();
+					c.s.executeUpdate(query1);
+					c.s.executeUpdate(query2);
+					JOptionPane.showMessageDialog(null, "Checkout Done");
+					setVisible(false);
+					new Reception();
+
+				} catch(Exception e1) {
+					e1.printStackTrace();
+				}
+			} else if(e.getSource()==check) {
+				
+				String id=c_customer.getSelectedItem();
+				String query="select * from customer where number ='"+id+"'";
+				try {
+					Conn c=new Conn();
+					ResultSet rs=c.s.executeQuery(query);
+					while(rs.next()) {
+						lblcheckintime.setText(rs.getString("checkin_time"));
+						lblroomnumber.setText(rs.getString("room"));
+					}
+
+					}
+				catch(Exception ae) {
+					ae.printStackTrace();
+				}
+			} 
+			else {
+				setVisible(false);
+				new Reception();
+			}
+			
+	}
+}
