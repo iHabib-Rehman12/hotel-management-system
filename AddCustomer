@@ -1,0 +1,205 @@
+package Reception;
+
+import java.awt.*;
+import javax.swing.*;
+
+import Admin.Reception;
+import Core.Conn;
+import java.sql.*;	
+import java.awt.event.*;
+import java.util.Date;
+
+
+public class AddCustomer extends JFrame implements ActionListener{
+		JLabel heading, lblId, numlbl, lblname, genderlbl, cntrylbl, tcheck_inlbl, deplbl, roomlbl, checkin_time;
+		JTextField tfnum,tfname,tfcntry,tfdep;
+        JComboBox Idcombo;
+        JRadioButton male,female;
+        JButton add,back;
+        Choice c_room;
+        Date date;
+        
+        public AddCustomer() {
+		
+		getContentPane().setBackground(Color.white);
+		setLayout(null);
+
+                ImageIcon i1  = new ImageIcon(ClassLoader.getSystemResource("icons/fifth.png"));
+                Image i3 = i1.getImage().getScaledInstance(300, 400,Image.SCALE_DEFAULT);
+                ImageIcon i2 = new ImageIcon(i3);
+                JLabel l1 = new JLabel(i2);
+                l1.setBounds(480,10,300,500);
+                add(l1);
+
+		heading= new JLabel("NEW CUSTOMER FORM");
+		heading.setFont(new Font("Yu Mincho", Font.BOLD, 20));
+		heading.setBounds(118, 11, 260, 53);
+		add(heading);
+
+        lblId = new JLabel("ID :");
+		lblId.setBounds(35, 76, 200, 14);
+		add(lblId);
+
+		Idcombo = new JComboBox(new String[] {"Passport", "CNIC", "Voter Id", "Driving license","Debit Card"});
+		Idcombo.setBounds(271, 73, 150, 20);
+		add(Idcombo);
+
+        numlbl = new JLabel("Number :");
+		numlbl.setBounds(35, 111, 200, 14);
+		add(numlbl);
+
+		tfnum = new JTextField();
+		tfnum.setBounds(271, 111, 150, 20);
+		add(tfnum);
+		tfnum.setColumns(10);
+
+		lblname = new JLabel("Name :");
+		lblname .setBounds(35, 151, 200, 14);
+		add(lblname);
+
+		tfname = new JTextField();
+		tfname.setBounds(271, 151, 150, 20);
+		add(tfname);
+		tfname.setColumns(10);
+
+
+		genderlbl = new JLabel("Gender :");
+		genderlbl.setBounds(35, 191, 200, 14);
+		add(genderlbl);
+
+                male = new JRadioButton("Male");
+                male.setFont(new Font("Raleway", Font.BOLD, 14));
+                male.setBackground(Color.WHITE);
+                male.setBounds(271, 191, 80, 12);
+                add(male);
+
+                female = new JRadioButton("Female");
+                female.setFont(new Font("Raleway", Font.BOLD, 14));
+                female.setBackground(Color.WHITE);
+                female.setBounds(350, 191, 100, 12);
+                add(female);
+                
+                ButtonGroup bg=new ButtonGroup();
+                bg.add(male);
+                bg.add(female);
+
+        cntrylbl = new JLabel("Country :");
+        cntrylbl.setBounds(35, 231, 200, 14);
+		add(cntrylbl);
+		
+		tfcntry = new JTextField();
+		tfcntry.setBounds(271, 231, 150, 20);
+		add(tfcntry);
+		tfcntry.setColumns(10);
+		
+		
+
+		roomlbl = new JLabel("Allocated Room Number :");
+		roomlbl.setBounds(35, 274, 200, 14);
+		add(roomlbl);
+
+		c_room = new Choice();
+                try{
+                    Conn c = new Conn();
+                    String query= "select * from room where availability = 'Available'";
+                    ResultSet rs = c.s.executeQuery(query);
+                    while(rs.next()){
+                    	c_room.add(rs.getString("room_num"));    
+                    }
+                } catch(Exception e){ }
+                c_room.setBounds(271, 274, 150, 20);
+		add(c_room);
+		
+		
+		
+		date = new Date();
+		tcheck_inlbl = new JLabel("Checked-In :");
+		tcheck_inlbl.setBounds(35, 316, 200, 14);
+		add(tcheck_inlbl);
+		
+		checkin_time = new JLabel(""+date);
+		checkin_time.setBounds(271, 316, 150, 20);
+		add(checkin_time);
+		
+
+		deplbl = new JLabel("Deposit :");
+		deplbl.setBounds(35, 359, 200, 14);
+		add(deplbl);
+
+
+		tfdep = new JTextField();
+		tfdep.setBounds(271, 359, 150, 20);
+		add(tfdep);
+		tfdep.setColumns(10);
+		
+		add = new JButton("Add");
+		add.setBounds(100, 430, 120, 30);
+        add.setBackground(Color.BLACK);
+        add.setForeground(Color.WHITE);
+        add(add);
+        add.addActionListener(this);
+
+
+        back = new JButton("Back");
+        back.setBounds(260, 430, 120, 30);
+        back.setBackground(Color.WHITE);
+        back.setForeground(Color.BLACK);
+        add(back);
+        back.addActionListener(this);
+        
+        setBounds(350, 200, 850, 550);
+		setVisible(true);
+		setTitle("Add Customer Info");
+        
+
+	}
+        @Override
+    	public void actionPerformed(ActionEvent e) {
+    		if(e.getSource()==back) {
+    			 new Reception().setVisible(true);
+                 setVisible(false);
+    		
+    	}
+    		else if(e.getSource()==add) {
+    			Conn c = new Conn();
+                String radio = null;
+
+                if(male.isSelected()){ 
+                    radio = "Male";
+                }
+                else if(female.isSelected()){ 
+                    radio = "Female";
+                }
+
+                String room = c_room.getSelectedItem();
+
+                try{
+
+                    String Id = (String)Idcombo.getSelectedItem(); 
+                    String num =  tfnum.getText();
+                    String name =  tfname.getText();
+                    String gender =  radio;
+                    String country =  tfcntry.getText();
+                    String time =  checkin_time.getText();
+                    String deposit =  tfdep.getText();
+
+                    String q1 = "insert into customer values('"+Id+"','"+num+"','"+name+"','"+gender+"','"+country+"','"+room+"','"+time+"','"+deposit+"')";
+                    String q2 = "update room set availability = 'Occupied' where room_num = "+room;
+                    c.s.executeUpdate(q1);
+                    c.s.executeUpdate(q2);
+
+
+                    JOptionPane.showMessageDialog(null, "Data Inserted Successfully");
+                    new Reception().setVisible(true);
+                    setVisible(false);
+                } catch(Exception ae){
+                	ae.printStackTrace();
+                	JOptionPane.showMessageDialog(null, "Please enter a valid Number");
+		}
+    }
+
+	
+		
+	}
+	
+}
