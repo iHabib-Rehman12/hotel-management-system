@@ -1,0 +1,173 @@
+package Admin;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Random;
+
+import Core.Conn;
+import javax.swing.*;
+
+public class AddDriver extends JFrame implements ActionListener{
+		 
+		JRadioButton rbmale,rbfemale;
+		JButton add,cancel;
+		JLabel heading,namelbl,agelbl,genderlbl,cmpnylbl,lblmodel,lblavailable,lblloc;
+		JTextField tfname,tfage,tfcmpy,tfmodel,tfloc;
+		JComboBox availCombo;
+		Random random = new Random();
+		int room_no=random.nextInt(100);
+
+		
+		public AddDriver() {
+			getContentPane().setBackground(Color.white);
+			setLayout(null);
+			
+			heading=new JLabel("Add Drivers");
+			heading.setFont(new Font("Tahoma",Font.BOLD,20));
+			heading.setBounds(150,10,200,30);
+			add(heading);
+			
+			namelbl=new JLabel("Name");
+			namelbl.setFont(new Font("Tahoma",Font.PLAIN,16));
+			namelbl.setBounds(60,50,200,30);
+			add(namelbl);
+			
+			
+			tfname = new JTextField();
+			tfname.setBounds(200,50,150,30);
+			add(tfname);
+			
+			
+			agelbl=new JLabel("Age");
+			agelbl.setFont(new Font("Tahoma",Font.PLAIN,16));
+			agelbl.setBounds(60,100,150,30);
+			add(agelbl);
+			
+			tfage = new JTextField();
+			tfage.setBounds(200,100,150,30);
+			add(tfage);
+			
+			genderlbl=new JLabel("Gender");
+			genderlbl.setFont(new Font("Tahoma",Font.PLAIN,16));
+			genderlbl.setBounds(60,150,120,30);
+			add(genderlbl);
+			
+			
+			rbmale=new JRadioButton("Male");
+			rbmale.setBounds(200,150,70,25);
+			rbmale.setFont(new Font("Tahoma",Font.PLAIN,14));
+			rbmale.setBackground(Color.white);
+			add(rbmale);
+			
+			rbfemale=new JRadioButton("Female");
+			rbfemale.setBounds(270,150,70,25);
+			rbfemale.setFont(new Font("Tahoma",Font.PLAIN,14));
+			rbfemale.setBackground(Color.white);
+			add(rbfemale);
+			
+			ButtonGroup bg=new ButtonGroup();
+			bg.add(rbmale);
+			bg.add(rbfemale);
+			
+			cmpnylbl=new JLabel("Car Company");
+			cmpnylbl.setFont(new Font("Tahoma",Font.PLAIN,16));
+			cmpnylbl.setBounds(60,190,120,30);
+			add(cmpnylbl);
+			
+			tfcmpy=new JTextField();
+			tfcmpy.setBounds(200,190,150,30);
+			tfcmpy.setBackground(Color.white);
+			add(tfcmpy);
+			
+			lblmodel=new JLabel("Car Model");
+			lblmodel.setFont(new Font("Tahoma",Font.PLAIN,16));
+			lblmodel.setBounds(60,240,120,30);
+			add(lblmodel);
+			
+			tfmodel = new JTextField();
+			tfmodel.setBackground(Color.white);
+			tfmodel.setBounds(200,240,150,30);
+			add(tfmodel);
+			
+			lblavailable=new JLabel("Availability");
+			lblavailable.setFont(new Font("Tahoma",Font.PLAIN,16));
+			lblavailable.setBounds(60,290,120,30);
+			add(lblavailable);
+			
+			String[] available= {"Available","Busy"};
+			availCombo=new JComboBox(available);
+			availCombo.setBounds(200,290,150,30);
+			add(availCombo);
+			
+			lblloc=new JLabel("Location");
+			lblloc.setFont(new Font("Tahoma",Font.PLAIN,16));
+			lblloc.setBounds(60,340,120,30);
+			add(lblloc);
+			
+			tfloc = new JTextField();
+			tfloc.setBackground(Color.white);
+			tfloc.setBounds(200,340,150,30);
+			add(tfloc);
+			
+			
+			add=new JButton("Add");
+			add.setBounds(60,390,130,30);
+			add(add);
+			add.setBackground(Color.black);
+			add.setForeground(Color.WHITE);
+			add.addActionListener(this);
+			
+			cancel=new JButton("Cancel");
+			cancel.setBounds(220,390,130,30);
+			add(cancel);
+			cancel.setForeground(Color.black);
+			cancel.setBackground(Color.WHITE);
+			cancel.addActionListener(this);
+			
+			ImageIcon i6=new ImageIcon(ClassLoader.getSystemResource("icons/eleven.jpg"));
+			Image i2= i6.getImage().getScaledInstance(500,300,Image.SCALE_DEFAULT);
+			ImageIcon i5=new ImageIcon(i2);
+			JLabel image=new JLabel(i5);
+			image.setBounds(400,50,500,350);
+			add(image);
+			
+			setVisible(true);
+			setBounds(300,200,980,470);
+			setTitle("Add Driver");
+
+		} 
+		public void actionPerformed(ActionEvent ae) {
+			if(ae.getSource()==add) {
+				String name=tfname.getText();
+				String age=(String) tfage.getText();
+				String comapny=tfcmpy.getText();
+				String model=tfmodel.getText();
+				String available=(String)availCombo.getSelectedItem();
+				String location=tfloc.getText();
+				
+				String gender=null;
+				if(rbmale.isSelected())
+					gender="Male";
+				else if(rbmale.isSelected())
+					gender="Female";
+				
+				try {
+					Conn c=new Conn();
+					
+					String str = "INSERT INTO driver (name, age, gender, company, model, availability, location) VALUES ('" +name+"', '"+ age + "', '" + gender + "', '" + comapny + "', '" + model + "', '"+available+"' ,'"+location+"')";					c.s.executeUpdate(str);
+
+					JOptionPane.showMessageDialog(null, "Driver Added Successfully");
+
+
+				} catch(Exception e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Kindly ensure all required fields are filled correctly.",getWarningString(), JOptionPane.WARNING_MESSAGE);
+					setVisible(false);
+				}
+
+				
+			}
+			else if(ae.getSource()==cancel) {
+				setVisible(false);
+			}
+		}
+}
