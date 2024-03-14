@@ -1,0 +1,116 @@
+package Reception;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+
+import Admin.Reception;
+import Core.Conn;
+import net.proteanit.sql.DbUtils;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+
+public class PickupService extends JFrame implements ActionListener{
+	JTable table;
+	JButton submit,back;
+	Choice car_type;
+	public PickupService(){
+		getContentPane().setBackground(Color.white);
+		setLayout(null);
+		
+		submit=new JButton("Submit");
+		submit.setBounds(170,500,120,30);
+		submit.setForeground(Color.white);
+		submit.setBackground(Color.black);
+		submit.addActionListener(this);
+		add(submit);
+		
+		back=new JButton("Back");
+		back.setBounds(350,500,120,30);
+		back.setForeground(Color.black);
+		back.setBackground(Color.white);
+		back.addActionListener(this);
+		add(back);
+		
+		JLabel search=new JLabel("Pickup Service");
+		search.setBounds(240,10,200,30);
+		search.setFont(new Font("Tahoma",Font.BOLD,22));
+		add(search);
+		
+		JLabel lbltype=new JLabel("Type of car");
+		lbltype.setFont(new Font("Tahoma",Font.HANGING_BASELINE,15));
+		lbltype.setBounds(42,60,100,30);
+		add(lbltype);
+		
+		car_type=new Choice();
+		car_type.setBounds(150,65,150,30);
+		car_type.setBackground(Color.white);
+		add(car_type);
+		
+		try {
+			Conn c=new Conn();
+			ResultSet rs=c.s.executeQuery("select * from driver");
+			while(rs.next()) {
+				car_type.add(rs.getString("model"));
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		table= new JTable();
+		
+		JTableHeader header=table.getTableHeader();
+		table.setBounds(0,160,900,400);
+		add(table);
+		
+		header.setBounds(0,130,900,30);
+		add(header);
+		
+		
+		Conn c=new Conn();
+
+		try {
+			ResultSet rs=c.s.executeQuery("select * from driver");
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+						
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(300,200,900,600);
+		setVisible(true);
+		setTitle("Room Search");
+		
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==submit) {
+			try {
+			Conn c=new Conn();
+			String query="select * from driver where model = '"+car_type.getSelectedItem()+"'";
+			ResultSet rs;
+			
+				rs = c.s.executeQuery(query);
+				table.setModel(DbUtils.resultSetToTableModel(rs));
+
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			
+		
+		}
+		else {
+			setVisible(false);
+			new Reception(); 
+		}
+		
+	}
+}
