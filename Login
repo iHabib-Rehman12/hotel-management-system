@@ -1,0 +1,92 @@
+package User_Interface;
+import javax.swing.*;
+import Core.Conn;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+public class Login extends JFrame implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	JTextField username=new JTextField();
+	JPasswordField password=new JPasswordField();
+	JButton login=new JButton("Login");
+	JButton cancel=new JButton("Cancel");
+	
+	
+	public Login(){
+		getContentPane().setBackground(Color.WHITE);
+		setLayout(null);
+		
+		JLabel user=new JLabel("Enter Username : ");
+		user.setBounds(40,20,150,30);
+		add(user);
+
+		username.setBounds(150,20,150,30);
+		add(username);
+		
+		JLabel pass=new JLabel("Enter Password : ");
+		pass.setBounds(40,70,100,30);
+		add(pass);
+		
+		password.setBounds(150,70,150,30);
+		add(password);
+		
+		
+		login.setBounds(150,110,150,30);
+		add(login);
+		login.setBackground(Color.black);
+		login.setForeground(Color.WHITE);
+		login.addActionListener(this);
+		
+		
+		cancel.setBounds(150,150,150,30);
+		add(cancel);
+		cancel.setForeground(Color.black);
+		cancel.setBackground(Color.WHITE);
+		cancel.addActionListener(this);
+		
+		ImageIcon i2  = new ImageIcon(ClassLoader.getSystemResource("icons/second.jpg"));
+    	Image iTemp=i2.getImage().getScaledInstance(250, 250, Image.SCALE_DEFAULT);
+    	ImageIcon iTemp2=new ImageIcon(iTemp);
+    	JLabel image=new JLabel(iTemp2);
+    	image.setBounds(350,10,200,200);
+    	add(image);
+		
+		
+    	setBounds(500,200,600,300);
+    	setTitle("Login");
+    	setVisible(true);
+}
+
+public void actionPerformed(ActionEvent ae) {
+	
+	if(ae.getSource()==login) {
+		String user=username.getText();
+		@SuppressWarnings("deprecation")
+		String pass=password.getText();
+		
+		try {
+			Conn c=new Conn();
+			
+			String query="select * from login where username = '"+user+"' and password = '"+pass+"'";
+			ResultSet rs=c.s.executeQuery(query);
+			if(rs.next()) {
+				setVisible(false);
+				new Dashboard();
+				
+			} else {
+				JOptionPane.showMessageDialog(null, "Invalid Username and Password");
+			
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	else if(ae.getSource()==cancel) {
+		setVisible(false);
+	}
+}
+}
