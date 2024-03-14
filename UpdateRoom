@@ -1,0 +1,150 @@
+package Reception;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+import javax.swing.*;
+
+import Admin.Reception;
+import Core.Conn;
+
+public class UpdateRoom extends JFrame implements ActionListener{
+	Choice c_customer;
+	JButton check,back,update;
+	JTextField tfroom,tfavail,tfstat;
+	public UpdateRoom(){
+		getContentPane().setBackground(Color.white);
+		setLayout(null);
+		
+		JLabel text=new JLabel("Update Room Status");
+		text.setFont(new Font("Tahoma",Font.BOLD,25));
+		text.setBounds(70,15,300,30);
+		text.setForeground(new Color(35,16,78));
+		add(text);
+		
+		
+		JLabel lblid=new JLabel("Customer Id");
+		lblid.setFont(new Font("Calibri",Font.PLAIN,16));
+		lblid.setBounds(30,80,100,30);
+		add(lblid);
+		
+		c_customer=new Choice();
+		c_customer.setBounds(200,80,150,25);
+		add(c_customer);
+		try {
+			Conn c=new Conn();
+			ResultSet rs=c.s.executeQuery("select * from customer");
+			while(rs.next()) {
+				c_customer.add(rs.getString("number"));
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		JLabel lblroom=new JLabel("Room No:");
+		lblroom.setFont(new Font("Calibri",Font.PLAIN,16));
+		lblroom.setBounds(30,130,100,30);
+		add(lblroom);
+		
+		tfroom=new JTextField();
+		tfroom.setBounds(200,130,150,25);
+		add(tfroom);
+		
+		JLabel lblname=new JLabel("Availability");
+		lblname.setFont(new Font("Calibri",Font.PLAIN,16));
+		lblname.setBounds(30,180,100,30);
+		add(lblname);
+		
+		tfavail=new JTextField();
+		tfavail.setBounds(200,180,150,25);
+		add(tfavail);
+		
+		JLabel clnstat=new JLabel("Cleaning Status");
+		clnstat.setFont(new Font("Calibri",Font.PLAIN,16));
+		clnstat.setBounds(30,230,150,30);
+		add(clnstat);
+		
+		tfstat=new JTextField();
+		tfstat.setBounds(200,230,150,25);
+		add(tfstat);
+		
+		
+		check=new JButton("Check");
+		check.setForeground(Color.white);
+		check.setBackground(Color.gray);
+		check.setBounds(25,300,100,30);
+		add(check);
+		check.addActionListener(this);
+		
+	
+		update=new JButton("Update");
+		update.setForeground(Color.white);
+		update.setBackground(Color.black);
+		update.setBounds(145,300,100,30);
+		add(update);
+		update.addActionListener(this);
+
+		back=new JButton("Back");
+		back.setForeground(Color.black);
+		back.setBackground(Color.white);
+		back.setBounds(265,300,100,30);
+		add(back);
+		back.addActionListener(this);
+
+		ImageIcon i1  = new ImageIcon(ClassLoader.getSystemResource("icons/seventh.jpg"));
+        Image i3 = i1.getImage().getScaledInstance(500, 300,Image.SCALE_DEFAULT);
+        ImageIcon i2 = new ImageIcon(i3);
+        JLabel l1 = new JLabel(i2);
+        l1.setBounds(400,50,500,300);
+        add(l1);
+		
+		
+		setBounds(300,200,950,450);
+		setVisible(true);
+		setTitle("Check Update Room");
+		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==back) {
+			setVisible(false);
+			new Reception();
+		} else if(e.getSource()==check) {
+			String id=c_customer.getSelectedItem();
+			String query="select * from customer where number ='"+id+"'"; 
+			try {
+				Conn c=new Conn();
+				ResultSet rs=c.s.executeQuery(query);
+				while(rs.next()) {
+					tfroom.setText(rs.getString("room"));
+				}
+				ResultSet rs2=c.s.executeQuery("select * from room where room_num = '"+tfroom.getText()+"'");
+				while(rs2.next()) {
+					tfavail.setText(rs2.getString("availability"));
+					tfstat.setText(rs2.getString("status"));
+
+				}
+
+			} catch(Exception ae) {
+				ae.printStackTrace();
+			}
+		}
+		else if(e.getSource()==update) {
+			String number=c_customer.getSelectedItem();
+			String room=tfroom.getText();
+			String available=tfavail.getText();
+			String status=tfstat.getText();
+			
+			try {
+				 Conn c=new Conn();
+				 c.s.executeUpdate("update room set availability = '"+available+"', status='"+status+"' WHERE room_num ='"+room+"'");
+				 JOptionPane.showMessageDialog(null, "Data Updated Successfully");
+				 setVisible(false);
+				 new Reception();
+			} catch(Exception ae) {
+				ae.printStackTrace();
+			}
+			
+		}
+	}
+}
