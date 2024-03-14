@@ -1,0 +1,62 @@
+package HotelManagement;
+import java.awt.*;
+import User_Interface.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+
+public class HotelManagementSystem implements ActionListener{
+	JFrame jFrame = new JFrame("QuattroQ Hospitality Suite");
+
+    public HotelManagementSystem() {
+    	
+    	ImageIcon i1  = new ImageIcon(ClassLoader.getSystemResource("icons/first.jpg"));
+    	JLabel image=new JLabel(i1);
+    	image.setBounds(0,0,1366,565);
+    	jFrame.add(image);
+    	
+    	JLabel text=new JLabel("QuattroQ Hospitality Suite");
+    	text.setBounds(5,438,1000,85);
+    	text.setBackground(image.getBackground());
+    	text.setForeground(image.getBackground());
+    	text.setFont(new Font("serif",Font.CENTER_BASELINE,70));
+    	image.add(text);
+    	
+    	JButton next=new JButton("Next");
+    	next.setBounds(1150,460,150,50);
+    	next.setBackground(Color.black);
+    	next.setForeground(Color.white);
+    	next.setFont(new Font("serif",Font.LAYOUT_NO_LIMIT_CONTEXT,30));
+    	image.add(next);
+    	next.addActionListener(this);
+    	jFrame.setBounds(50,120,1366,565);
+    	jFrame.setVisible(true);
+    	
+    	
+    	   
+    	while(true) {
+    		text.setVisible(false);
+    		try {
+    			Thread.sleep(500);
+    		}
+    		catch(Exception e) {
+    			e.printStackTrace();
+    		}
+    		text.setVisible(true);
+    		try {
+    			Thread.sleep(500);
+    		}
+    		catch(Exception e) {
+    			e.printStackTrace();
+    		}
+    		
+    	}
+    		
+    }
+
+public void actionPerformed(ActionEvent ae){
+	jFrame.setVisible(false);
+	new Login();
+	
+}
+}
