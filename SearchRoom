@@ -1,0 +1,117 @@
+package Reception;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+
+import Admin.Reception;
+import Core.Conn;
+import net.proteanit.sql.DbUtils;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+
+
+public class SearchRoom extends JFrame implements ActionListener{
+	JTable table;
+	JButton submit,back;
+	JComboBox<?> typecombo;
+	JCheckBox ch;
+	public SearchRoom(){
+		getContentPane().setBackground(Color.white);
+		setLayout(null);
+		
+		submit=new JButton("Submit");
+		submit.setBounds(170,500,120,30);
+		submit.setForeground(Color.white);
+		submit.setBackground(Color.black);
+		submit.addActionListener(this);
+		add(submit);
+		
+		back=new JButton("Back");
+		back.setBounds(350,500,120,30);
+		back.setForeground(Color.black);
+		back.setBackground(Color.white);
+		back.addActionListener(this);
+		add(back);
+		
+		JLabel search=new JLabel("Search for Room");
+		search.setBounds(240,10,200,30);
+		search.setFont(new Font("Tahoma",Font.BOLD,22));
+		add(search);
+		
+		JLabel lbltype=new JLabel("Type/Category");
+		lbltype.setFont(new Font("Tahoma",Font.HANGING_BASELINE,14));
+		lbltype.setBounds(42,60,120,30);
+		add(lbltype);
+		
+		String typeOption[]= {"Standard","Deluxe","Suite","Family Room"};
+		typecombo=new JComboBox(typeOption);
+		typecombo.setBounds(150,60,150,30);
+		typecombo.setBackground(Color.white);
+		add(typecombo);
+		
+		ch=new JCheckBox("Only display Available");
+		ch.setBounds(500,60,200,30);
+		ch.setBackground(Color.white);
+		add(ch);
+		
+		table= new JTable();
+		
+		JTableHeader header=table.getTableHeader();
+		table.setBounds(0,160,700,400);
+		add(table);
+		
+		header.setBounds(0,130,700,30);
+		add(header);
+		
+		
+		Conn c=new Conn();
+
+		try {
+			ResultSet rs=c.s.executeQuery("select * from room");
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+						
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(300,200,700,600);
+		setVisible(true);
+		setTitle("Room Search");
+		
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==submit) {
+			Conn c=new Conn();
+			try {
+				String q1="select * from room where room_type='"+typecombo.getSelectedItem()+"'";
+				String q2="select * from room where availability='Available' AND room_type = '"+typecombo.getSelectedItem()+"'";
+
+				ResultSet rs1;
+				if(ch.isSelected()) {
+					rs1=c.s.executeQuery(q2);
+					table.setModel(DbUtils.resultSetToTableModel(rs1));
+
+				}
+				else {
+					 rs1=c.s.executeQuery(q1);
+					 table.setModel(DbUtils.resultSetToTableModel(rs1));
+				}
+				
+			} catch(Exception ae) {
+				ae.printStackTrace();
+			}
+		
+		}
+		else {
+			setVisible(false);
+			new Reception(); 
+		}
+		
+	}
+}
