@@ -1,0 +1,147 @@
+package Admin;
+
+import javax.swing.*;
+
+import Reception.*;
+
+import java.awt.*;
+
+public class Reception extends JFrame {
+	JButton newCF,rooms,depatmt,allEmp,CustInfo,MangInfo,Checkout,updStatus,UpdroomStat,pickupSer,searchRoom,logout;
+	
+	public Reception(){
+		getContentPane().setBackground(Color.white);
+		setLayout(null);
+		
+		newCF=new JButton("New Customer Form");
+		newCF.setBounds(10,30,200,30);
+		newCF.setBackground(Color.black);
+		newCF.setForeground(Color.white);
+		add(newCF);
+		newCF.addActionListener(ActionEvent -> {
+			new AddCustomer();
+			setVisible(false);
+		});
+		
+		rooms = new JButton("Rooms");
+		rooms.setBounds(10,70,200,30);
+		rooms.setBackground(Color.black);
+		rooms.setForeground(Color.white);
+		add(rooms);
+		rooms.addActionListener(ActionEvent -> {
+			new ViewRoom();
+			setVisible(false);
+		});
+		
+		depatmt = new JButton("Department");
+		depatmt.setBounds(10,110,200,30);
+		depatmt.setBackground(Color.black);
+		depatmt.setForeground(Color.white);
+		add(depatmt);
+		depatmt.addActionListener(ActionEvent -> {
+			new Department();
+			setVisible(false);
+		});
+		
+		allEmp = new JButton("All Employee");
+		allEmp.setBounds(10,150,200,30);
+		allEmp.setBackground(Color.black);
+		allEmp.setForeground(Color.white);
+		add(allEmp);
+		allEmp.addActionListener(ActionEvent -> {
+			new EmployeeInfo();
+			setVisible(false);
+		});
+		
+		CustInfo = new JButton("Customer Info");
+		CustInfo.setBounds(10,190,200,30);
+		CustInfo.setBackground(Color.black);
+		CustInfo.setForeground(Color.white);
+		add(CustInfo);
+		CustInfo.addActionListener(ActionEvent -> {
+			new CustomerInfo();
+			setVisible(false);
+		});
+		
+		MangInfo = new JButton("Manager Info");
+		MangInfo.setBounds(10,230,200,30);
+		MangInfo.setBackground(Color.black);
+		MangInfo.setForeground(Color.white);
+		add(MangInfo);
+		MangInfo.addActionListener(ActionEvent -> {
+			new ManagerInfo();
+			setVisible(false);
+		});
+		
+		Checkout = new JButton("Checkout");
+		Checkout.setBounds(10,270,200,30);
+		Checkout.setBackground(Color.black);
+		Checkout.setForeground(Color.white);
+		add(Checkout);
+		Checkout.addActionListener(ActionEvent -> {
+			new Checkout();
+			setVisible(false);
+		});
+		
+		updStatus = new JButton("Update Status");
+		updStatus.setBounds(10,310,200,30);
+		updStatus.setBackground(Color.black);
+		updStatus.setForeground(Color.white);
+		add(updStatus);
+		updStatus.addActionListener(ActionEvent -> {
+			new UpdateCheck();
+			setVisible(false);
+		});
+		
+		UpdroomStat = new JButton("Update Room Status");
+		UpdroomStat.setBounds(10,350,200,30);
+		UpdroomStat.setBackground(Color.black);
+		UpdroomStat.setForeground(Color.white);
+		add(UpdroomStat);
+		UpdroomStat.addActionListener(ActionEvent -> {
+			new UpdateRoom();
+			setVisible(false);
+		});
+		
+		pickupSer = new JButton("Pickup Service");
+		pickupSer.setBounds(10,390,200,30);
+		pickupSer.setBackground(Color.black);
+		pickupSer.setForeground(Color.white);
+		add(pickupSer);
+		pickupSer.addActionListener(ActionEvent -> {
+			new PickupService();
+			setVisible(false);
+		});
+		
+		searchRoom = new JButton("Search Room");
+		searchRoom.setBounds(10,430,200,30);
+		searchRoom.setBackground(Color.black);
+		searchRoom.setForeground(Color.white);
+		add(searchRoom);
+		searchRoom.addActionListener(ActionEvent -> {
+			new SearchRoom();
+			setVisible(false);
+		});
+		logout = new JButton("Logout");
+		logout.setBounds(10,470,200,30);
+		logout.setBackground(Color.black);
+		logout.setForeground(Color.white);
+		add(logout);
+		logout.addActionListener(ActionEvent -> {
+			setVisible(false);
+			
+		});
+		
+		ImageIcon i7=new ImageIcon(ClassLoader.getSystemResource("icons/fourth.jpg"));
+		JLabel image=new JLabel(i7);
+		image.setBounds(250,30,500,470);
+		add(image);
+		
+		
+		setBounds(350,200,800,570);
+		setVisible(true);
+		setTitle("Reception");
+		
+	}
+
+}
