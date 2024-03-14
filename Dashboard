@@ -1,0 +1,78 @@
+package User_Interface;
+import java.awt.event.*;
+
+import java.awt.*;
+import javax.swing.*;
+
+import Admin.*;
+@SuppressWarnings("serial")
+public class Dashboard extends JFrame implements ActionListener{
+	
+	public Dashboard(){
+		setLayout(null);
+		ImageIcon i3  = new ImageIcon(ClassLoader.getSystemResource("icons/third.jpg"));
+    	JLabel image=new JLabel(i3);
+    	image.setBounds(0,0,1440,900);
+    	add(image);
+		
+    	JLabel text=new JLabel ("THE QUATTROq WELCOMES YOU");
+    	text.setBounds(400,80, 1000,50);
+		setBounds(0,0, 1440,900);
+		text.setFont(new Font("Tahoma",Font.CENTER_BASELINE,46));
+		text.setBackground(image.getBackground());
+    	text.setForeground(image.getBackground());
+		image.add(text);
+		
+		JMenuBar ab=new JMenuBar();
+		ab.setBounds(0,0,1550,30);
+		image.add(ab);
+		
+		
+		JMenu hotel=new JMenu("Hotel MANAGEMENT");
+		hotel.setForeground(Color.red);
+		ab.add(hotel);
+		
+		JMenuItem reception=new JMenuItem("RECEPTION");
+		hotel.add(reception);
+		reception.addActionListener(ActionEvent -> {
+			new Reception();
+		});
+		
+		
+		JMenu admin=new JMenu("ADMIN");
+		admin.setForeground(Color.BLUE);
+		ab.add(admin);
+		
+		JMenuItem addEmployee=new JMenuItem("ADD EMPLOYEE");
+		admin.add(addEmployee);
+		addEmployee.addActionListener(ActionEvent -> {
+			new AddEmployee();
+		});
+			
+	 
+		
+		JMenuItem addRooms=new JMenuItem("ADD ROOMS");
+		admin.add(addRooms); 
+		addRooms.addActionListener(ActionEvent -> {
+			new AddRooms();
+	});
+		
+		JMenuItem addDrivers=new JMenuItem("ADD DRIVERS");
+		admin.add(addDrivers);
+		addDrivers.addActionListener(ActionEvent -> {
+			new AddDriver();
+	});
+		
+		setTitle("DashBoard");
+		setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+	}
+
+
+
+}
+
