@@ -1,0 +1,151 @@
+package Admin;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Random;
+
+import Core.Conn;
+import javax.swing.*;
+
+public class AddRooms extends JFrame implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	JButton add,cancel;
+	JLabel heading,roomlbl1,roomlbl2,lblavailable,lblclean,lblprice,lbltype,lblbed;
+	JTextField tfroom,tfprice;
+	JComboBox<?> availablecombo,cleancombo,typecombo,bedcombo;
+	Random random = new Random();
+	int room_no=random.nextInt(100);
+
+	
+	public AddRooms() {
+		getContentPane().setBackground(Color.white);
+		setLayout(null);
+		
+		heading=new JLabel("Add Rooms");
+		heading.setFont(new Font("Tahoma",Font.BOLD,20));
+		heading.setBounds(150,10,200,30);
+		add(heading);
+		
+		roomlbl1=new JLabel("Room Number");
+		roomlbl1.setFont(new Font("Tahoma",Font.PLAIN,16));
+		roomlbl1.setBounds(60,60,200,30);
+		add(roomlbl1);
+		
+		
+		tfroom = new JTextField();
+		tfroom.setBounds(200,60,150,30);
+		add(tfroom);
+		
+		
+		lblavailable=new JLabel("Availability");
+		lblavailable.setFont(new Font("Tahoma",Font.PLAIN,16));
+		lblavailable.setBounds(60,110,150,30);
+		add(lblavailable);
+		
+		String availableOptions[]= {"Available","Occupied","Reserved"};
+		availablecombo=new JComboBox(availableOptions);
+		availablecombo.setBounds(200,110,150,30);
+		availablecombo.setBackground(Color.white);
+		add(availablecombo);
+		
+		lblclean=new JLabel("Cleaning Status");
+		lblclean.setFont(new Font("Tahoma",Font.PLAIN,16));
+		lblclean.setBounds(60,160,120,30);
+		add(lblclean);
+		
+		String CleanOption[]= {"Vacant","Clean","Dirty","Under Maintainance"};
+		cleancombo=new JComboBox(CleanOption);
+		cleancombo.setBounds(200,160,150,30);
+		cleancombo.setBackground(Color.white);
+		add(cleancombo);
+		
+		lbltype=new JLabel("Type/Category");
+		lbltype.setFont(new Font("Tahoma",Font.PLAIN,16));
+		lbltype.setBounds(60,210,120,30);
+		add(lbltype);
+		
+		String typeOption[]= {"Standard","Deluxe","Suite","Family Room"};
+		typecombo=new JComboBox(typeOption);
+		typecombo.setBounds(200,210,150,30);
+		typecombo.setBackground(Color.white);
+		add(typecombo);
+		
+		lblbed=new JLabel("No: of Beds");
+		lblbed.setFont(new Font("Tahoma",Font.PLAIN,16));
+		lblbed.setBounds(60,260,120,30);
+		add(lblbed);
+		
+		String[] beds= {"1","2","3","4","5"};
+		bedcombo = new JComboBox(beds);
+		bedcombo.setBackground(Color.white);
+		bedcombo.setBounds(200,260,150,30);
+		add(bedcombo);
+		
+		lblprice=new JLabel("Price");
+		lblprice.setFont(new Font("Tahoma",Font.PLAIN,16));
+		lblprice.setBounds(60,310,120,30);
+		add(lblprice);
+		
+		tfprice = new JTextField();
+		tfprice.setBounds(200,310,150,30);
+		add(tfprice);
+		
+		
+		add=new JButton("Add");
+		add.setBounds(60,380,130,30);
+		add(add);
+		add.setBackground(Color.black);
+		add.setForeground(Color.WHITE);
+		add.addActionListener(this);
+		
+		cancel=new JButton("Cancel");
+		cancel.setBounds(220,380,130,30);
+		add(cancel);
+		cancel.setForeground(Color.black);
+		cancel.setBackground(Color.WHITE);
+		cancel.addActionListener(this);
+		
+		ImageIcon i5=new ImageIcon(ClassLoader.getSystemResource("icons/twelve.jpg"));
+		JLabel image=new JLabel(i5);
+		image.setBounds(400,50,500,350);
+		add(image);
+		
+		setVisible(true);
+		setBounds(330,200,940,470);
+
+	}
+	public void actionPerformed(ActionEvent ae) {
+		if(ae.getSource()==add) {
+			String room_num=tfroom.getText();
+			String availability=(String) availablecombo.getSelectedItem();
+			String status=(String)cleancombo.getSelectedItem();
+			String price=tfprice.getText();
+			String type=(String)typecombo.getSelectedItem();
+			String beds=(String)bedcombo.getSelectedItem();
+			
+			try {
+				Conn c=new Conn();
+				
+				String str = "INSERT INTO room (room_num, availability, status, price, room_type, no_of_beds) VALUES ('" +room_num+"', '"+ availability + "', '" + status + "', '" + price + "', '" + type + "', '"+beds+"')";
+				c.s.executeUpdate(str);
+
+
+				JOptionPane.showMessageDialog(null, "Room Added Successfully");
+				
+
+			} catch(Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Kindly ensure all required fields are filled correctly.",getWarningString(), JOptionPane.WARNING_MESSAGE);
+				setVisible(false);
+			}
+
+			
+		}
+		else if(ae.getSource()==cancel) {
+			setVisible(false);
+		}
+	}
+}
